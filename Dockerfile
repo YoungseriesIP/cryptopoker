@@ -1,20 +1,19 @@
 # Arc Poker — Game Server (WebSocket backend)
-# Deploy this to Railway or Fly.io for production WebSocket support.
 FROM oven/bun:1.2-alpine
 
 WORKDIR /app
 
-# Copy only what the server needs
+# Copy package files and install deps
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile
 
-# Copy source files the server imports
+# Copy the full source tree the server needs
 COPY server/ ./server/
-COPY src/types/ ./src/types/
-COPY src/lib/ ./src/lib/
+COPY src/ ./src/
 
 EXPOSE 3001
 
 ENV PORT=3001
+ENV NODE_ENV=production
 
 CMD ["bun", "run", "server/game-server.ts"]
